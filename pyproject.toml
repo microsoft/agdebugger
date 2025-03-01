@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agdebugger"
+version = "0.0.1"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "typer",
+    "pydantic",
+    "aiofiles",
+    "openai",
+    "autogen-agentchat>=0.4.0",
+    "autogen-ext[openai]>=0.4.0",
+]
+
+[tool.setuptools]
+packages = ["agdebugger", "agdebugger.web"]
+package-dir = { "" = "src", "agdebugger.web" = "frontend" }
+include-package-data = true
+
+[tool.setuptools.package-data]
+"agdebugger.web" = ["../../frontend/dist/**"]
+
+[project.optional-dependencies]
+dev = ["ruff", "pyright", "mypy", "pytest", "pytest-asyncio", "types-Pillow"]
+
+[project.scripts]
+agdebugger = "agdebugger.cli:main_cli"
+
+[tool.ruff]
+line-length = 120
+fix = true
+exclude = ["build", "dist", "my_project/__init__.py", "my_project/main.py"]
+target-version = "py310"
+include = ["src/**", "examples/**"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "Q", "I"]
+ignore = ["F401", "E501"]
+
+[tool.mypy]
+files = ["src", "examples", "tests"]
+
+strict = true
+python_version = "3.10"
+ignore_missing_imports = true
+
+# from https://blog.wolt.com/engineering/2021/09/30/professional-grade-mypy-configuration/
+disallow_untyped_defs = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+show_error_codes = true
+warn_unused_ignores = false
+
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_any_unimported = true
+
+[tool.pyright]
+include = ["src", "examples", "tests"]
+typeCheckingMode = "basic"
+reportUnnecessaryIsInstance = false
+reportMissingTypeStubs = false
+reportUnknownVariableType = false
+reportMissingParameterType = false
+reportUnknownParameterType = false
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
