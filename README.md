@@ -1,60 +1,69 @@
 # AGDebugger
 
-AGDebugger helps you debug your agent workflows. It lets you interactively visualize agent conversations and provides interactions to edit conversations and agent configurations across histories.
+AGDebugger helps you debug your agent teams. It offers interactions to:
+
+1. Interactively send and step through agent messages
+2. Edit previously sent agent messages and revert to earlier points in a conversation
+3. Navigate agent conversations with an interactive visualization
+
+![screenshot of AGDebugger interface](.github/screenshots/agdebugger_sc.png)
 
 ## Local Install
 
-AGDebugger is not yet available as a pip package. You can install it locally by cloning the repo and installing the python package.
-
-NOTE: Do not pip install -e . for the last step or else it cant find the frontend files!
+You can install AGDebugger locally by cloning the repo and installing the python package.
 
 ```sh
+# Install & build frontend
 cd frontend
 npm install
 npm run build
+# Install & build agdebugger python package
 cd ..
 pip install .
 ```
 
 ## Usage
 
-To use `agdebugger`, you should author a file which exposes an AgentGroupchat that includes all of the agents in your system. You should then call `agdebugger` and pass the module and variable name in that module that contains the SingleThreadedAgentRuntime.
+AGDebugger is built on top of [AutoGen](https://microsoft.github.io/autogen/stable/). To use AGDebugger, you provide a python file that exposes a function that creates an [AutoGen AgentChat](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/index.html) team for debugging. You can then launch AgDebugger with this agent team.
 
-```sh
-agdebugger MODULE:VARIABLE
+For example, the script below creates a simple agent team with a single WebSurfer agent.
+
+```python
+# scenario.py
+from autogen_agentchat.teams import MagenticOneGroupChat
+from autogen_agentchat.ui import Console
+from autogen_ext.agents.web_surfer import MultimodalWebSurfer
+from autogen_ext.models.openai import OpenAIChatCompletionClient
+
+async def get_agent_team():
+    model_client = OpenAIChatCompletionClient(model="gpt-4o")
+
+    surfer = MultimodalWebSurfer(
+        "WebSurfer",
+        model_client=model_client,
+    )
+    team = MagenticOneGroupChat([surfer], model_client=model_client)
+
+    return team
 ```
 
-For example:
+We can then launch the interface with:
 
 ```sh
  agdebugger scenario:get_agent_team
 ```
 
-# Development
+## Citation
 
-## Backend
+See our CHI 2025 paper for more details on the design and evaluation of AGDebugger.
 
-```sh
-# Install editable
-pip install -e .
-
-AGDEBUGGER_BACKEND_SERVE_UI=FALSE agdebugger scenario:get_agent_team --port 8123
-```
-
-## Frontend
-
-First time
-
-```sh
-cd frontend
-# Create a .env.development.local file with the required API URL
-echo "VITE_AGDEBUGGER_FRONTEND_API_URL=http://localhost:8123/api" > .env.development.local
-npm install
-```
-
-Later
-
-```sh
-cd frontend
-npm run dev
+```bibtex
+@inproceedings{epperson25agdebugger,
+    title={Interactive Debugging and Steering of Multi-Agent AI Systems},
+    author={Will Epperson and Gagan Bansal and Victor Dibia and Adam Fourney and Jack Gerrits and Erkang Zhu and Saleema Amershi},
+    year={2025},
+    publisher = {Association for Computing Machinery},
+    booktitle = {Proceedings of the 2025 CHI Conference on Human Factors in Computing Systems},
+    series = {CHI '25}
+}
 ```
