@@ -1,8 +1,8 @@
 # AGDebugger
 
-AGDebugger helps you debug your agent teams. It offers interactions to:
+AGDebugger is an interactive system to help you debug your agent teams. It offers interactions to:
 
-1. Interactively send and step through agent messages
+1. Send and step through agent messages
 2. Edit previously sent agent messages and revert to earlier points in a conversation
 3. Navigate agent conversations with an interactive visualization
 
@@ -52,6 +52,8 @@ We can then launch the interface with:
 ```sh
  agdebugger scenario:get_agent_team
 ```
+
+Once in the interface, you can send a GroupChatStart message to the start the agent conversation and begin debugging!
 
 ## Citation
 
