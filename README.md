@@ -57,7 +57,7 @@ Once in the interface, you can send a GroupChatStart message to the start the ag
 
 ## Citation
 
-See our CHI 2025 paper for more details on the design and evaluation of AGDebugger.
+See our [CHI 2025 paper](https://arxiv.org/abs/2503.02068) for more details on the design and evaluation of AGDebugger.
 
 ```bibtex
 @inproceedings{epperson25agdebugger,
